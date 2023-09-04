@@ -35,7 +35,7 @@ export default async (req, res) => {
 
     try {
       const result = await cloudinary.uploader.upload(file.filepath, {
-        upload_preset: 'hgrniko7',
+        upload_preset: process.env.CLOUD_PRESET,
         public_id: file.originalFilename
       });
 
