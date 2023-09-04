@@ -26,8 +26,6 @@ function Home() {
 
   return (
     <main className={styles.main}>
-      {/* ... (the rest of your content) ... */}
-      
       <div className={styles.uploadSection}>
         <input type="file" onChange={onFileChange} />
         <button onClick={uploadToCloudinary}>Upload to Cloudinary</button>

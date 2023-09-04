@@ -1,8 +1,11 @@
-import axios from 'axios';
+import cloudinary from 'cloudinary';
 import { IncomingForm } from 'formidable';
-import FormData from 'form-data';
-import fs from 'fs';
 
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
+});
 
 export const config = {
   api: {
@@ -30,21 +33,13 @@ export default async (req, res) => {
       return res.status(400).json({ error: 'No file provided' });
     }
 
-    // Create a new FormData object
-    const formData = new FormData();
-    formData.append('file', fs.createReadStream(file.filepath));
-    formData.append('upload_preset', 'hgrniko7');
-    formData.append('file_name', file.originalFilename);
-
     try {
-      const cloudinaryResponse = await axios.post(
-        `https://api.cloudinary.com/v1_1/dybpyxqbr/image/upload`,
-        formData,
-        {
-          headers: formData.getHeaders(),
-        }
-      );
-      res.json(cloudinaryResponse.data);
+      const result = await cloudinary.uploader.upload(file.filepath, {
+        upload_preset: 'hgrniko7',
+        public_id: file.originalFilename
+      });
+
+      res.json(result);
     } catch (error) {
       console.error("Error uploading image:", error);
       res.status(500).json({ error: 'Upload failed' });
